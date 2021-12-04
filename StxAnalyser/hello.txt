@@ -1,0 +1,22 @@
+class fuck{
+private:
+ int a;
+ int b;
+
+public:
+ *fuck (int x, int y) : a(x), b(y){
+ }
+
+};
+
+
+class Monster{
+private:
+int x;
+
+public:
+
+Monster int a) : x(a){
+}
+
+};
