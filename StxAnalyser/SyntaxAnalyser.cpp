@@ -247,7 +247,7 @@ bool ConstructAnalyser::FindError() {
 
 	for (int i = 0; i < nameofClass.length(); i++)
 		if (strtoProcess[i] != nameofClass[i]) {
-			errorDescription = "Неправильное имя конструктора";
+			errorDescription = "Неизвестные символы перед именем конструктора";
 			return true;
 		}
 
