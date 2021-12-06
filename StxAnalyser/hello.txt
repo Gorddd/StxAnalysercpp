@@ -15,8 +15,7 @@ private:
 int x;
 
 public:
-
-Monster int a) : x(a){
+Monster (int a) : x(a){
 }
 
 };

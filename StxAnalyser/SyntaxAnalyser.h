@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include <vector>
 
 using namespace std;
 
@@ -12,7 +13,8 @@ private:
 	string errorDescription;
 
 	bool hasInitializationList();
-
+	bool ParamsHandler(vector<string>& nameofParams);
+	int DeleteandCountTypes(string& params);
 public:
 	bool FindError();
 	void TakeRow(string str, string nameofClass);

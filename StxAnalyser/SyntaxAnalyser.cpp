@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "SyntaxAnalyser.h"
 
 using namespace std;
@@ -84,6 +85,48 @@ bool ConstructAnalyser::hasInitializationList() {
 	return strtoProcess.find(":") != -1;
 }
 
+bool ConstructAnalyser::ParamsHandler(vector<string>& nameofParams)
+{
+	string params = strtoProcess;
+
+	params.erase(0, params.find("(") + 1);
+	params.erase(params.find(")"));
+
+	int numberofVariables = 1;
+	for (int i = 0; i < params.length(); i++)
+	{
+		if (params[i] == ',')
+			numberofVariables++;
+	}
+	int numberofTypes = DeleteandCountTypes(params);
+	if (numberofTypes != numberofVariables) {
+		errorDescription = "Ошибка в описании типа в параметрах";
+		return true;
+	}
+	
+	return false;
+}
+
+int ConstructAnalyser::DeleteandCountTypes(string& params)
+{
+	int count = 0;
+	while (params.find("int") != -1) { //Сотрёт int
+		params.erase(params.find("int"), 3);
+		count++;
+	}
+
+	while (params.find("char") != -1) { //Сотрёт char
+		params.erase(params.find("char"), 4);
+		count++;
+	}
+
+	while (params.find("float") != -1) { //Сотрёт float
+		params.erase(params.find("float"), 5);
+		count++;
+	}
+	return count;
+}
+
 bool ConstructAnalyser::FindError() {
 	if (!hasInitializationList())
 		return false;
@@ -102,7 +145,11 @@ bool ConstructAnalyser::FindError() {
 		return true;
 	}
 
-
+	vector<string> nameofParams;
+	if (ParamsHandler(nameofParams))
+		return true;
+		
+	
 
 	return false;
 }
