@@ -92,16 +92,29 @@ bool ConstructAnalyser::ParamsHandler(vector<string>& nameofParams)
 	params.erase(0, params.find("(") + 1);
 	params.erase(params.find(")"));
 
-	int numberofVariables = 1;
+	int numberofTypes = DeleteandCountTypes(params);
+	int numberofVariables = 0;
+	if (!params.empty())
+		numberofVariables++;
 	for (int i = 0; i < params.length(); i++)
 	{
 		if (params[i] == ',')
 			numberofVariables++;
 	}
-	int numberofTypes = DeleteandCountTypes(params);
 	if (numberofTypes != numberofVariables) {
 		errorDescription = "Ошибка в описании типа в параметрах";
 		return true;
+	}
+	
+	string varName;
+	for (int i = 0; i < params.length() + 1; i++)
+	{
+		if (params[i] == ',' || i == params.length()) {
+			nameofParams.push_back(varName);
+			varName.clear();
+		}
+		else
+			varName += params[i];
 	}
 	
 	return false;
