@@ -15,6 +15,9 @@ private:
 	bool hasInitializationList();
 	bool ParamsHandler(vector<string>& nameofParams);
 	int DeleteandCountTypes(string& params);
+	bool InitializationListHandler(vector<string> nameofParams);
+	int GetNumberofCommas(string str);
+	bool GetNumberofBlocks(string str, int& num);
 public:
 	bool FindError();
 	void TakeRow(string str, string nameofClass);

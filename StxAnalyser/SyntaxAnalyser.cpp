@@ -140,6 +140,104 @@ int ConstructAnalyser::DeleteandCountTypes(string& params)
 	return count;
 }
 
+bool ConstructAnalyser::InitializationListHandler(vector<string> nameofParams)
+{
+	string initList = strtoProcess;
+
+	initList.erase(0, initList.find(":") + 1);
+
+	if (initList.find("(") == -1 && initList.find(")") == -1) {
+		errorDescription = "В списке инициализации отсутствуют \"()\"";
+		return true;
+	}
+
+	if (initList.find("(") == -1) {
+		errorDescription = "В списке инициализации отсутствует \"(\"";
+		return true;
+	}
+
+	if (initList.find(")") == -1) {
+		errorDescription = "В списке инициализации отсутствует \")\"";
+		return true;
+	}
+
+	int numberofCommas = GetNumberofCommas(initList);
+	int numberofBlocks;
+	if (GetNumberofBlocks(initList, numberofBlocks)) {
+		errorDescription = "Проблема в количестве ( или )";
+		return true;
+	}
+
+	if (numberofCommas + 1 != numberofBlocks) {
+		errorDescription = "Проблема в несоответствии \",\" и \"()\"";
+		return true;
+	}
+
+	string nameofVar;
+	while (!initList.empty()) {
+		if (initList.find("(") != -1)
+			initList.erase(0, initList.find("(") + 1);
+		else
+			break;
+		
+		for (int i = 0; initList[i] != ')'; i++)
+		{
+			nameofVar += initList[i];
+		}
+
+		if (nameofVar.empty())
+			continue;
+
+		for (int i = 0; i < nameofParams.size(); i++)
+		{
+			if (nameofVar == nameofParams[i])
+				break;
+			else
+				if (i == nameofParams.size() - 1) {
+					errorDescription = "Неизвестное имя переменной в списке инициализации в ()";
+					return true;
+				}
+		}
+		nameofVar.clear();
+	}
+
+	return false;
+}
+
+int ConstructAnalyser::GetNumberofCommas(string str)
+{
+	int count = 0;
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == ',')
+			count++;
+	}
+	return count;
+}
+
+bool ConstructAnalyser::GetNumberofBlocks(string str, int& num)
+{
+	num = 0;
+	bool flag = false;
+
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == '(') {
+			if (flag)
+				return true;
+			flag = true;
+		}
+		if (str[i] == ')') {
+			if (!flag)
+				return true;
+			flag = false;
+			num++;
+		}
+	}
+
+	return flag;
+}
+
 bool ConstructAnalyser::FindError() {
 	if (!hasInitializationList())
 		return false;
@@ -162,7 +260,8 @@ bool ConstructAnalyser::FindError() {
 	if (ParamsHandler(nameofParams))
 		return true;
 		
-	
+	if (InitializationListHandler(nameofParams))
+		return true;
 
 	return false;
 }

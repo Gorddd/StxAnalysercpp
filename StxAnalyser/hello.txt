@@ -13,9 +13,11 @@ public:
 class Monster{
 private:
 int x;
+char sym;
+float de;
 
 public:
-Monster (int suck, char c, float d) : x(){
+Monster (int suck, char c, float d) : x(), sym(), de() { 
 }
 
 };
